@@ -179,7 +179,7 @@ using nitrokey::misc::strcpyT;
 
     void NitrokeyManager::set_debug(bool state) {
         if (state){
-            Log::instance().set_loglevel(Loglevel::DEBUG);
+            Log::instance().set_loglevel(Loglevel::DEBUG_L2);
         } else {
             Log::instance().set_loglevel(Loglevel::ERROR);
         }
@@ -542,7 +542,7 @@ using nitrokey::misc::strcpyT;
     }
 
     void NitrokeyManager::enable_password_safe(const char *user_pin) {
-        device->add_receive_repeats(20);
+        device->add_receive_repeats(40);
       //The following command will cancel enabling PWS if it is not supported
         auto a = get_payload<IsAESSupported>();
         strcpyT(a.user_password, user_pin);

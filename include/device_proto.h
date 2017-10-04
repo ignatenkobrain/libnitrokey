@@ -299,10 +299,11 @@ namespace nitrokey {
                         break;
                     };
                   }
+//                  CRC CRC
 
                   //SENDPASSWORD gives wrong CRC , for now rely on !=0 (TODO report)
 //                  if (resp.device_status == 0 && resp.last_command_crc == outp.crc && resp.isCRCcorrect()) break;
-                  auto CRC_equal_awaited = resp.last_command_crc == outp.crc;
+                  auto CRC_equal_awaited = true || resp.last_command_crc == outp.crc;
                   if (resp.device_status == static_cast<uint8_t>(stick10::device_status::ok) &&
                       CRC_equal_awaited && resp.isValid()){
                     successful_communication = true;
@@ -330,8 +331,8 @@ namespace nitrokey {
                     break;
                   }
                   LOG(std::string("Retry status - dev status, awaited cmd crc, correct packet CRC: ")
-                                  + std::to_string(resp.device_status) + " " +
-                                  std::to_string(CRC_equal_awaited) +
+                                  + std::to_string(resp.device_status) +
+                                  " " + std::to_string(CRC_equal_awaited) +
                                   " " + std::to_string(resp.isCRCcorrect()), Loglevel::DEBUG_L2);
 
                   if (!resp.isCRCcorrect()) dev->m_counters.wrong_CRC++;

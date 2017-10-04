@@ -168,9 +168,10 @@ def test_enable_password_safe_after_factory_reset(C):
         # for some reason storage likes to be authenticated before reset (to investigate)
         assert C.NK_first_authenticate(DefaultPasswords.ADMIN, DefaultPasswords.ADMIN_TEMP) == DeviceErrorCode.STATUS_OK
     assert C.NK_factory_reset(DefaultPasswords.ADMIN) == DeviceErrorCode.STATUS_OK
-    wait(10)
+    wait(5)
     if is_storage(C):
         assert C.NK_clear_new_sd_card_warning(DefaultPasswords.ADMIN) == DeviceErrorCode.STATUS_OK
+
     enable_password_safe_result = C.NK_enable_password_safe(DefaultPasswords.USER)
     assert enable_password_safe_result == DeviceErrorCode.STATUS_AES_DEC_FAILED \
            or is_storage(C) and enable_password_safe_result == DeviceErrorCode.WRONG_PASSWORD
