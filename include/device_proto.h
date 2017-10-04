@@ -264,6 +264,8 @@ namespace nitrokey {
 
                 // FIXME make checks done in device:recv here
                 receiving_retry_counter = dev->get_retry_receiving_count();
+                receiving_retry_counter += dev->getM_additional_retry_receiving_count();
+
                 int busy_counter = 0;
                 auto retry_timeout = dev->get_retry_timeout();
                 while (receiving_retry_counter-- > 0) {
@@ -308,7 +310,7 @@ namespace nitrokey {
                   }
                   if (resp.device_status == static_cast<uint8_t>(stick10::device_status::busy)) {
                     dev->m_counters.busy++;
-                    if (busy_counter++<3) {
+                    if (busy_counter++<10) {
                       receiving_retry_counter++;
                       LOG("Status busy, not decreasing receiving_retry_counter counter: " +
                                       std::to_string(receiving_retry_counter), Loglevel::DEBUG_L2);

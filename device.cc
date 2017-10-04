@@ -159,6 +159,11 @@ bool Device::could_be_enumerated() {
 #endif
 }
 
+void Device::add_receive_repeats(const int add_repeats){
+  m_additional_retry_receiving_count = std::max(0,m_additional_retry_receiving_count);
+  m_additional_retry_receiving_count += add_repeats;
+}
+
 void Device::show_stats() {
   auto s = m_counters.get_as_string();
   LOG(s, Loglevel::DEBUG_L2);

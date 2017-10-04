@@ -100,7 +100,12 @@ public:
   void set_retry_delay(std::chrono::milliseconds delay);
   static void set_default_device_speed(int delay);
   void setDefaultDelay();
-
+  void add_receive_repeats(const int add_repeats);
+  int getM_additional_retry_receiving_count() {
+    int z = m_additional_retry_receiving_count;
+    m_additional_retry_receiving_count = 0;
+    return z;
+  }
 private:
   std::atomic<uint8_t> last_command_status;
   void _reconnect();
@@ -119,12 +124,15 @@ protected:
    */
   const int m_retry_sending_count;
   const int m_retry_receiving_count;
+  int m_additional_retry_receiving_count = 0;
+
   std::chrono::milliseconds m_retry_timeout;
   std::chrono::milliseconds m_send_receive_delay;
   std::atomic<hid_device *>mp_devhandle;
 
   static std::atomic_int instances_count;
   static std::chrono::milliseconds default_delay ;
+
 };
 
 class Stick10 : public Device {

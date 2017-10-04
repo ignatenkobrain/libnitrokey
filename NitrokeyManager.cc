@@ -484,6 +484,7 @@ using nitrokey::misc::strcpyT;
         auto authreq = get_payload<FirstAuthenticate>();
         strcpyT(authreq.card_password, pin);
         strcpyT(authreq.temporary_password, temporary_password);
+        device->add_receive_repeats(20);
         FirstAuthenticate::CommandTransaction::run(device, authreq);
         return true;
     }
@@ -541,7 +542,8 @@ using nitrokey::misc::strcpyT;
     }
 
     void NitrokeyManager::enable_password_safe(const char *user_pin) {
-        //The following command will cancel enabling PWS if it is not supported
+        device->add_receive_repeats(20);
+      //The following command will cancel enabling PWS if it is not supported
         auto a = get_payload<IsAESSupported>();
         strcpyT(a.user_password, user_pin);
         IsAESSupported::CommandTransaction::run(device, a);
@@ -655,6 +657,7 @@ using nitrokey::misc::strcpyT;
     void NitrokeyManager::factory_reset(const char *admin_password) {
         auto p = get_payload<FactoryReset>();
         strcpyT(p.admin_password, admin_password);
+        device->add_receive_repeats(20);
         FactoryReset::CommandTransaction::run(device, p);
     }
 
@@ -762,10 +765,12 @@ using nitrokey::misc::strcpyT;
     }
 
     void NitrokeyManager::unlock_encrypted_volume(const char* user_pin){
+      device->add_receive_repeats(20);
       misc::execute_password_command<stick20::EnableEncryptedPartition>(device, user_pin);
     }
 
     void NitrokeyManager::unlock_hidden_volume(const char* hidden_volume_password) {
+      device->add_receive_repeats(20);
       misc::execute_password_command<stick20::EnableHiddenEncryptedPartition>(device, hidden_volume_password);
     }
 
@@ -773,6 +778,7 @@ using nitrokey::misc::strcpyT;
     //if not return library exception
     void NitrokeyManager::create_hidden_volume(uint8_t slot_nr, uint8_t start_percent, uint8_t end_percent,
                                                const char *hidden_volume_password) {
+      device->add_receive_repeats(20);
       auto p = get_payload<stick20::SetupHiddenVolume>();
       p.SlotNr_u8 = slot_nr;
       p.StartBlockPercent_u8 = start_percent;
@@ -802,6 +808,7 @@ using nitrokey::misc::strcpyT;
     }
 
     void NitrokeyManager::fill_SD_card_with_random_data(const char* admin_pin) {
+      device->add_receive_repeats(20);
       auto p = get_payload<stick20::FillSDCardWithRandomChars>();
       p.set_defaults();
       strcpyT(p.admin_pin, admin_pin);
